@@ -808,78 +808,114 @@
     },
     "Up": function (arg) {
       var target = arg.target;
-      var text = target.value, texts = text.split('\n'), len = text.length;
-      if (texts.length < 2) return;
-      var point = target.selectionEnd, _point = 0, current = -1, totals = [0];
-      texts.some(function (txt, i) {
-        var next = _point + txt.length + 1;
-        if (point < next) {
-          current = point - _point;
-          var line = i - arg.times;
-          if (line < 0) {
-            line = 0;
-          }
-          var total = totals[line];
-          var _txt = texts[line];
-          var cr = total + Math.min(current, _txt.length);
-          target.setSelectionRange(cr, cr);
-          return true;
+      if (target.getAttribute('contenteditable')) {
+        var i;
+        for (i = 0; i < arg.times; ++i) {
+          window.getSelection().modify('move', 'backward', 'line');
         }
-        _point = next;
-        totals.push(_point);
-      });
+      } else {
+        var text = target.value, texts = text.split('\n'), len = text.length;
+        if (texts.length < 2) return;
+        var point = target.selectionEnd, _point = 0, current = -1, totals = [0];
+        texts.some(function (txt, i) {
+          var next = _point + txt.length + 1;
+          if (point < next) {
+            current = point - _point;
+            var line = i - arg.times;
+            if (line < 0) {
+              line = 0;
+            }
+            var total = totals[line];
+            var _txt = texts[line];
+            var cr = total + Math.min(current, _txt.length);
+            target.setSelectionRange(cr, cr);
+            return true;
+          }
+          _point = next;
+          totals.push(_point);
+        });
+      }
     },
     "Down": function (arg) {
       var target = arg.target;
-      var text = target.value, texts = text.split('\n'), len = text.length;
-      if (texts.length < 2) return;
-      var point = target.selectionStart, _point = 0, current = -1, line = -1;
-      texts.some(function (txt, _i) {
-        var next = _point + txt.length + 1;
-        if (line === _i) {
-          var cr = _point + Math.min(current, txt.length);
-          target.setSelectionRange(cr, cr);
-          return true;
-        } else if (point < next && current === -1) {
-          current = point - _point;
-          line = Math.min(_i + arg.times, texts.length - 1);
+      if (target.getAttribute('contenteditable')) {
+        var i;
+        for (i = 0; i < arg.times; ++i) {
+          window.getSelection().modify('move', 'forward', 'line');
         }
-        _point = next;
-      });
+      } else {
+        var text = target.value, texts = text.split('\n'), len = text.length;
+        if (texts.length < 2) return;
+        var point = target.selectionStart, _point = 0, current = -1, line = -1;
+        texts.some(function (txt, _i) {
+          var next = _point + txt.length + 1;
+          if (line === _i) {
+            var cr = _point + Math.min(current, txt.length);
+            target.setSelectionRange(cr, cr);
+            return true;
+          } else if (point < next && current === -1) {
+            current = point - _point;
+            line = Math.min(_i + arg.times, texts.length - 1);
+          }
+          _point = next;
+        });
+      }
     },
     "Left": function (arg) {
       var target = arg.target;
-      target.setSelectionRange(target.selectionStart - arg.times, target.selectionStart - arg.times);
+      if (target.getAttribute('contenteditable')) {
+        var i;
+        for (i = 0; i < arg.times; ++i) {
+          window.getSelection().modify('move', 'backward', 'character');
+        }
+      } else {
+        target.setSelectionRange(target.selectionStart - arg.times, target.selectionStart - arg.times);
+      }
     },
     "Right": function (arg) {
       var target = arg.target;
-      target.setSelectionRange(target.selectionEnd + arg.times, target.selectionEnd + arg.times);
+      if (target.getAttribute('contenteditable')) {
+        var i;
+        for (i = 0; i < arg.times; ++i) {
+          window.getSelection().modify('move', 'forward', 'character');
+        }
+      } else {
+        target.setSelectionRange(target.selectionEnd + arg.times, target.selectionEnd + arg.times);
+      }
     },
     "Line head": function (arg) {
       var target = arg.target;
-      var text = target.value, texts = text.split('\n'), len = text.length;
-      var point = target.selectionStart, _point = 0, current = -1;
-      texts.some(function (txt, i) {
-        var next = _point + txt.length + 1;
-        if (point < next) {
-          target.setSelectionRange(_point, _point);
-          return true;
-        }
-        _point = next;
-      });
+      if (target.getAttribute('contenteditable')) {
+          window.getSelection().modify('move', 'backward', 'lineboundary');
+      } else {
+        var text = target.value, texts = text.split('\n'), len = text.length;
+        var point = target.selectionStart, _point = 0, current = -1;
+        texts.some(function (txt, i) {
+          var next = _point + txt.length + 1;
+          if (point < next) {
+            target.setSelectionRange(_point, _point);
+            return true;
+          }
+          _point = next;
+        });
+      }
     },
     "Line foot": function (arg) {
       var target = arg.target;
-      var text = target.value, texts = text.split('\n'), len = text.length;
-      var point = target.selectionStart, _point = 0, current = -1;
-      texts.some(function (txt) {
-        var next = _point + txt.length + 1;
-        if (point < next) {
-          target.setSelectionRange(next - 1, next - 1);
-          return true;
-        }
-        _point = next;
-      });
+      if (target.getAttribute('contenteditable')) {
+          window.getSelection().modify('move', 'forward', 'lineboundary');
+      } else {
+        var text = target.value, texts = text.split('\n'), len = text.length;
+        var point = target.selectionStart, _point = 0, current = -1;
+        texts.some(function (txt) {
+          var next = _point + txt.length + 1;
+          if (point < next) {
+            target.setSelectionRange(next - 1, next - 1);
+            return true;
+          }
+          _point = next;
+        });
+      }
     }
   };
 
@@ -1188,11 +1224,14 @@
       if (config.chrome_vim) {
         document.documentElement.addEventListener('focus', function (evt) {
           var target = evt.target;
-          if ('selectionStart' in target && target.disabled !== true) {
+          if (('selectionStart' in target || target.getAttribute('contenteditable')) && target.disabled !== true) {
             var s = null;
             try {
               s = target.selectionStart;
             } catch (e) {
+            }
+            if (s === null) {
+              s = target.getAttribute('contenteditable');
             }
             if (s !== null) {
               var def = config.vim_default_mode;
@@ -1225,9 +1264,16 @@
       }
       var target = evt.target;
       var isTextedit = false;
-      if ('selectionStart' in target && target.disabled !== true) {
+      if (('selectionStart' in target || target.getAttribute('contenteditable')) && target.disabled !== true) {
+        var s = null;
         try {
-          var s = target.selectionStart;
+          s = target.selectionStart;
+        } catch (e) {
+        }
+        if (s === null) {
+          s = target.getAttribute('contenteditable');
+        }
+        if (s !== null) {
           if (KeyConfig.config.chrome_vim) {
             if (KeyConfig.vimActionSet === 'vim_normal_actions') {
               evt.preventDefault();
@@ -1239,7 +1285,6 @@
           if (!/^[CMA]-/.test(key)) {
             return;
           }
-        } catch (e) {
         }
       }
       this.handleKey(key, evt, target, KeyConfig.actionSet, isTextedit);
