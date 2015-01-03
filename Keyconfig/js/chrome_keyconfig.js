@@ -1225,6 +1225,9 @@
       }
       var target = evt.target;
       var isTextedit = false;
+      if (target.tagName === 'OBJECT') {
+        return;
+      }
       if (('selectionStart' in target || target.isContentEditable) && target.disabled !== true) {
         try {
           var s = target.selectionStart;
