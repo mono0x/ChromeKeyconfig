@@ -1270,6 +1270,9 @@
       }
       var target = evt.target;
       var isTextedit = false;
+      if (target.tagName === 'OBJECT') {
+        return;
+      }
       if (('selectionStart' in target || target.getAttribute('contenteditable')) && target.disabled !== true) {
         var s = null;
         try {
