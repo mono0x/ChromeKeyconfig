@@ -156,6 +156,20 @@
   var keyconfig = chrome.runtime.id;
   var Namespace = 'http://ss-o.net/chrome_extension/ChromeKeyconfig/';
 
+  function locationObject() {
+    return {
+      hash: location.hash,
+      host: location.host,
+      hostname: location.hostname,
+      href: location.href,
+      origin: location.origin,
+      pathname: location.pathname,
+      port: location.port,
+      protocol: location.protocol,
+      search: location.search
+    };
+  }
+
   function backRequest(message) {
     chrome.runtime.sendMessage(keyconfig, message, ResponseHandler);
   }
@@ -709,11 +723,11 @@
     },
     "normal mode": function () {
       KeyConfig.actionSet = 'normal_actions';
-      backRequest({actionSet: KeyConfig.actionSet, location: location});
+      backRequest({actionSet: KeyConfig.actionSet, location: locationObject()});
     },
     "limited mode": function () {
       KeyConfig.actionSet = 'limited_actions';
-      backRequest({actionSet: KeyConfig.actionSet, location: location});
+      backRequest({actionSet: KeyConfig.actionSet, location: locationObject()});
     },
     "lunch quickmark": function () {
       Utils.registerOneKeyHandler(function (key) {
@@ -1406,7 +1420,7 @@
     }
   }
 
-  backRequest({init: true, location: location}, function (message) {
+  backRequest({init: true, location: locationObject()}, function (message) {
   });
   if (debug) {
     _override(KeyConfig, 'init');
