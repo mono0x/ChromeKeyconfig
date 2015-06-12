@@ -1284,7 +1284,7 @@
       }
       var target = evt.target;
       var isTextedit = false;
-      if (target.tagName === 'OBJECT') {
+      if (target.tagName === 'OBJECT' || target.tagName == 'EMBED') {
         return;
       }
       if (('selectionStart' in target || target.getAttribute('contenteditable')) && target.disabled !== true) {
