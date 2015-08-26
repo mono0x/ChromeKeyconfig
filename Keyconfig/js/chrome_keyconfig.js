@@ -1283,37 +1283,36 @@
         return;
       }
       var target = evt.target;
-      var isTextedit = false;
       if (target.tagName === 'OBJECT' || target.tagName == 'EMBED') {
         return;
       }
-      if (('selectionStart' in target || target.getAttribute('contenteditable')) && target.disabled !== true) {
-        var s = null;
-        try {
-          s = target.selectionStart;
-        } catch (e) {
-        }
-        if (s === null) {
-          s = target.getAttribute('contenteditable');
-        }
-        if (s !== null) {
-          if (KeyConfig.config.chrome_vim) {
-            if (s === undefined && target.isContentEditable) {
-              return;
-            }
-            if (KeyConfig.vimActionSet === 'vim_normal_actions') {
-              evt.preventDefault();
-            }
-            if (this.handleKey(key, evt, target, KeyConfig.vimActionSet, true)) {
-              return;
-            }
+      var isTextedit = false;
+      if ('selectionStart' in target) {
+        isTextedit = true;
+      }
+      else if (target.tagName === 'INPUT') {
+        isTextedit = true;
+      }
+      else if (target.getAttribute('contenteditable')) {
+        isTextedit = true;
+      }
+      if (isTextedit && target.disabled !== true) {
+        if (KeyConfig.config.chrome_vim) {
+          if (s === undefined && target.isContentEditable) {
+            return;
           }
-          if (!/^[CMA]-/.test(key)) {
+          if (KeyConfig.vimActionSet === 'vim_normal_actions') {
+            evt.preventDefault();
+          }
+          if (this.handleKey(key, evt, target, KeyConfig.vimActionSet, true)) {
             return;
           }
         }
+        if (!/^[CMA]-/.test(key)) {
+          return;
+        }
       }
-      this.handleKey(key, evt, target, KeyConfig.actionSet, isTextedit);
+      this.handleKey(key, evt, target, KeyConfig.actionSet, false);
     },
     handleKey: function (key, evt, target, actionset, isTextedit) {
       var matched = false;
