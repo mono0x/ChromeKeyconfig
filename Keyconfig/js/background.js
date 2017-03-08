@@ -27,11 +27,11 @@ this.Keyconfig = {
     "a a": {name: "focus first text input", args: []},
     "C-d": {name: "navigate form elements forward", args: []},
     "C-u": {name: "navigate form elements backward", args: []},
-    "Esc": {name: "limited mode", args: []},
+    "Escape": {name: "limited mode", args: []},
     "c o n f i g": {name: "Keyconfig", args: []}
   },
   limited_actions: {
-    "Esc": {name: "normal mode", args: []}
+    "Escape": {name: "normal mode", args: []}
   },
   useTabTitle: false,
   smooth_scroll: false,
@@ -45,11 +45,11 @@ this.Keyconfig = {
     "l": {name: "Right", args: []},
     "^": {name: "Line head", args: []},
     "$": {name: "Line foot", args: []},
-    "Esc": {name: "normal mode", args: []},
+    "Escape": {name: "normal mode", args: []},
     "i": {name: "insert mode", args: []}
   },
   vim_insert_actions: {
-    "Esc": {name: "normal mode", args: []}
+    "Escape": {name: "normal mode", args: []}
   },
   vim_default_mode: 'insert',
   vim_color_config: {
@@ -502,7 +502,7 @@ function LDRize() {
   }
 
   function UpdateSiteinfo() {
-    var url = 'http://ss-o.net/json/wedataLDRize.json';
+    var url = 'http://os0x.heteml.jp/ss-onet/json/wedataLDRize.json';
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
       try {
